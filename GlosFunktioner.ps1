@@ -12,7 +12,7 @@ function GetAvailableTxtFiles ($folder) {
 
 
 function SetLastTxtFileSelected ($choices) {
-        $last = $choices.Count
+        $last = $choices.Count - 1
         $choices[$last].IsSelected = $true
     return $choices
 }
@@ -47,57 +47,52 @@ function GetRandomWord ($words) {
     return $randomWord
 }
 
+
 function GetRandomNumber ($wordCount) {
     $randomNumber = Get-Random -Min 0 -Max $wordCount
     return $randomNumber
 }
 
-function GetPreviousNumber ($current, $total) {
-    $previous = $current - 1
-    if ($previous -eq 0) { $previous = $total }
-    return $previous
+
+function IncreaseIndex($currentIndex,$arrayLength) {
+    return ($currentIndex + 1 - $arrayLength) % $arrayLength
 }
+
+function DecreaseIndex($currentIndex,$arrayLength) {
+    return ($currentIndex - 1 + $arrayLength) % $arrayLength
+}
+
+
+
 
 
 
 # Tests
 $pathTxtFolder = ".\ListorMedOrd"
-$availableTxtFiles = GetAvailableTxtFiles $pathTxtFolder
-#$availableTxtFiles
+$allTxtFiles = GetAvailableTxtFiles $pathTxtFolder
+$allTxtFiles = SetLastTxtFileSelected($allTxtFiles)
+#$allTxtFiles
 
-$availableTxtFiles[0].IsSelected = $true
-$availableTxtFiles[1].IsSelected = $true
+#$availableTxtFiles[0].IsSelected = $true
+#$availableTxtFiles[1].IsSelected = $true
 $availableTxtFiles[2].IsSelected = $true
 $availableTxtFiles[3].IsSelected = $true
-$availableTxtFiles[4].IsSelected = $true
-$selectedFiles = GetSelectedFiles $availableTxtFiles
+#$availableTxtFiles[4].IsSelected = $true
+$selectedFiles = GetSelectedFiles $allTxtFiles
 #$selectedFiles
 
 $Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
 #Words
 
-$NumberOfWords = $Words.Count
-write-host "hittade $NumberOfWords ord i filerna"
+$WordCount = $Words.Count
+#write-host "hittade $NumberOfWords ord i filerna"
 
-write-host "ett smakprov"
-$currentNumber = GetRandomNumber ($Words.Count)
-$currentWord = $words[$currentNumber]
-write-host "$currentNumber : $currentWord"
+[int]$currentIndex = GetRandomNumber $Words.Count
+[string]$currentWord = $words[$currentIndex]
+#write-host "$currentIndex : $currentWord"
 
-$currentNumber = GetRandomNumber ($Words.Count)
-$currentWord = $words[$currentNumber]
-write-host "$currentNumber : $currentWord"
-
-$currentNumber = GetRandomNumber ($Words.Count)
-$currentWord = $words[$currentNumber]
-write-host "$currentNumber : $currentWord"
+#$words[$currentIndex]
+#$currentIndex = DecreaseIndex $currentIndex $WordCount
+#$words[$currentIndex]
 
 
-
-
-
-#function GetSelectedFileNames ($choices) {
-#    $selectedItems = $choices | Where-Object { $_.IsSelected }
-#    $fileNames = $selectedItems | Select-Object -ExpandProperty Name
-#    return ($fileNames -join ", ")
-#}
