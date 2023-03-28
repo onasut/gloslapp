@@ -92,7 +92,7 @@ $WordCount = $Words.Count
 #write-host "$currentIndex : $currentWord"
 
 #$words[$currentIndex]
-#$currentIndex = DecreaseIndex $currentIndex $WordCount
+$currentIndex = DecreaseIndex $currentIndex $WordCount
 #$words[$currentIndex]
 
 
