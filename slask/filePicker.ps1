@@ -1,4 +1,6 @@
-﻿# Läser in xaml-koden från en fil
+﻿Add-Type -AssemblyName PresentationFramework
+
+# Läser in xaml-koden från en fil
 [xml]$xaml = Get-Content -Path "filePicker.xaml"
 
 # Skapar ett fönster från xaml-koden
@@ -28,32 +30,7 @@ function GetSelectedFileNames {
 }
 
 # Binder Text-egenskapen till funktionen
-#$comboBox.SetBinding([System.Windows.Controls.ComboBox]::TextProperty, [System.Windows.Data.Binding]::new("GetSelectedFileNames"))
-$obj = New-Object PSObject
-$obj | Add-Member -MemberType ScriptMethod -Name GetSelectedFileNames -Value {
-    $selectedItems = $choices | Where-Object { $_.IsSelected } | ForEach-Object { $_.Name }
-    return ($selectedItems -join ", ")
-}
-
-$multiBinding = New-Object System.Windows.Data.MultiBinding
-$multiBinding.Converter = [System.Windows.Data.MultiBindingConverter] {
-    param($values, $targetType, $parameter, $culture)
-    $selectedItems = $values[0] | Where-Object { $_.IsSelected } | ForEach-Object { $_.Name }
-    return ($selectedItems -join ", ")
-}
-
-$checkBoxBinding = New-Object System.Windows.Data.Binding
-$checkBoxBinding.Path = "IsSelected"
-$checkBoxBinding.Mode = [System.Windows.Data.BindingMode]::OneWay
-$multiBinding.Bindings.Add($checkBoxBinding)
-
-$binding = New-Object System.Windows.Data.Binding
-$binding.Mode = [System.Windows.Data.BindingMode]::OneWay
-$binding.UpdateSourceTrigger = [System.Windows.Data.UpdateSourceTrigger]::PropertyChanged
-$binding.Source = $multiBinding
-
-$comboBox.SetBinding([System.Windows.Controls.ComboBox]::TextProperty, $binding)
-
+$comboBox.SetBinding([System.Windows.Controls.ComboBox]::TextProperty, [System.Windows.Data.Binding]::new("GetSelectedFileNames"))
 
 # Skapar en händelsehanterare för ok-knappen
 $okButton.Add_Click({
