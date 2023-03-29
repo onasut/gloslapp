@@ -1,8 +1,9 @@
 ﻿# Ange filnamn
-$fileName = "./Wordlist.txt"
+$file = Get-ChildItem -Path .\ListorMedOrd | Select-Object -Last 1
+$filePath = '.\ListorMedOrd\' + $($file.Name)
 
 # Hämta innehållet i filen
-$content = Get-Content -Path $fileName -Raw -Encoding UTF8
+$content = Get-Content -Path $filePath -Raw -Encoding UTF8
 
 # Ta bort dubbla mellanslag och nya rader
 $content = $content -replace '\s+', ' '
@@ -21,6 +22,10 @@ Function Create-RandomWord {
     # Returnera det slumpmässiga ordet
     return $randomWord
 }
+
+
+
+
 
 # Skapa ett nytt formulär med en knapp och en etikett
 $form = New-Object System.Windows.Forms.Form
