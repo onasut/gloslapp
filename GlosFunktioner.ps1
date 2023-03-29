@@ -4,7 +4,7 @@ function GetAvailableTxtFiles ($folder) {
     $choices = Get-ChildItem -Path $folder -Filter "*.txt" | ForEach-Object {
         New-Object PSObject -Property @{
             Name = $_.Name
-            IsSelected = $false
+            IsChecked = $false
         }
     }
     return $choices
@@ -13,13 +13,13 @@ function GetAvailableTxtFiles ($folder) {
 
 function SetLastTxtFileSelected ($choices) {
         $last = $choices.Count - 1
-        $choices[$last].IsSelected = $true
+        $choices[$last].IsChecked = $true
     return $choices
 }
 
 
 function GetSelectedFiles ($choices) {
-    $selectedItems = $choices | Where-Object { $_.IsSelected }
+    $selectedItems = $choices | Where-Object { $_.IsChecked }
     return $selectedItems
 }
 
@@ -68,31 +68,28 @@ function DecreaseIndex($currentIndex,$arrayLength) {
 
 
 # Tests
-$pathTxtFolder = ".\ListorMedOrd"
-$allTxtFiles = GetAvailableTxtFiles $pathTxtFolder
-$allTxtFiles = SetLastTxtFileSelected($allTxtFiles)
+#$pathTxtFolder = ".\ListorMedOrd"
+#$allTxtFiles = GetAvailableTxtFiles $pathTxtFolder
+#$allTxtFiles = SetLastTxtFileSelected($allTxtFiles)
 #$allTxtFiles
 
-#$availableTxtFiles[0].IsSelected = $true
-#$availableTxtFiles[1].IsSelected = $true
-$availableTxtFiles[2].IsSelected = $true
-$availableTxtFiles[3].IsSelected = $true
-#$availableTxtFiles[4].IsSelected = $true
-$selectedFiles = GetSelectedFiles $allTxtFiles
+#$availableTxtFiles[2].IsChecked = $true
+#$availableTxtFiles[3].IsChecked = $true
+#$selectedFiles = GetSelectedFiles $allTxtFiles
 #$selectedFiles
 
-$Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
+#$Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
 #Words
 
-$WordCount = $Words.Count
+#[int]$WordCount = $Words.Count
 #write-host "hittade $NumberOfWords ord i filerna"
 
-[int]$currentIndex = GetRandomNumber $Words.Count
-[string]$currentWord = $words[$currentIndex]
+#[int]$currentIndex = GetRandomNumber $Words.Count
+#[string]$currentWord = $words[$currentIndex]
 #write-host "$currentIndex : $currentWord"
 
 #$words[$currentIndex]
-$currentIndex = DecreaseIndex $currentIndex $WordCount
+#$currentIndex = DecreaseIndex $currentIndex $WordCount
 #$words[$currentIndex]
 
 
