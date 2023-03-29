@@ -19,26 +19,29 @@ $selectedFiles = $allTxtFiles | Where-Object { $_.IsChecked }
 $global:Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
 $global:currentIndex = GetRandomNumber $Words.Count
 
-# Loading gui
+# Loading xaml gui
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 [xml]$xaml = Get-Content -Path $pathXml
 $reader = New-Object System.Xml.XmlNodeReader $xaml
 $Window = [Windows.Markup.XamlReader]::Load($reader)
 
-#==============
-# Bindings
-#==============
-
-# Dropdown menu to select which textfiles to use
+# Populate menu to select which textfiles to use
 $checkListOptions = $allTxtFiles
 $CheckListBox = $Window.FindName("CheckListBox")
 $CheckListBox.ItemsSource = $checkListOptions
 
-# Glosa
+# Expander to make the menu drop down 
+$Expander = $Window.FindName("Expander")
+#$Expander.Header= "Välj läxor" # <-- issue. encoding problem when setting it from here. reverting to settings header in xaml for now. investigate.
+$Expander.Add_Collapsed({
+    write-host "collapsed"
+})
+
+# Text - Glosa
 $Glosa = $Window.FindName("textBlockGlosa")
 $Glosa.Text = $words[$currentIndex]
 
-# Knapp för Föregående
+# Button - Previous
 $buttonPrev = $Window.FindName("buttonPrev")
 $buttonPrev.Add_Click({
     $currentIndex = DecreaseIndex $currentIndex $Words.Count
@@ -46,17 +49,17 @@ $buttonPrev.Add_Click({
     $Glosa.Text = $words[$currentIndex]
 })
 
-# Knapp för Slumpvis
+# Button - Random
 $buttonRand = $Window.FindName("buttonRand")
 $buttonRand.Add_Click({ 
-    $WordCount = $global:Words.Count
-    $global:currentIndex = GetRandomNumber $WordCount
-    $currentIndex = $global:currentIndex
+    $WordCount = $Words.Count
+    $currentIndex = GetRandomNumber $WordCount
+    $global:currentIndex = $currentIndex
     $Glosa.Text = $words[$currentIndex]
     # write-host "count: $wordcount index: $currentIndex"
 })
 
-# Knapp för Nästa
+# Button - Next
 $buttonNext = $Window.FindName("buttonNext")
 $buttonNext.Add_Click({ 
     $currentIndex = IncreaseIndex $currentIndex $Words.Count

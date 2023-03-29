@@ -11,7 +11,7 @@
     </Grid.RowDefinitions>
 
     <!-- Expander -->
-    <Expander Grid.Row="0" Header="Välj läxor" Panel.ZIndex="1">
+    <Expander x:Name="Expander" Grid.Row="0" Panel.ZIndex="1" Header="Välj läxor">
         <ListBox x:Name="CheckListBox">
             <ListBox.ItemTemplate>
                 <DataTemplate>
