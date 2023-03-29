@@ -25,16 +25,18 @@ $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 $reader = New-Object System.Xml.XmlNodeReader $xaml
 $Window = [Windows.Markup.XamlReader]::Load($reader)
 
-# Populate menu to select which textfiles to use
-$checkListOptions = $allTxtFiles
+# Populate menu to select which textfiles to use 
 $CheckListBox = $Window.FindName("CheckListBox")
-$CheckListBox.ItemsSource = $checkListOptions
+$CheckListBox.ItemsSource = $allTxtFiles
 
 # Expander to make the menu drop down 
 $Expander = $Window.FindName("Expander")
 #$Expander.Header= "Välj läxor" # <-- issue. encoding problem when setting it from here. reverting to settings header in xaml for now. investigate.
 $Expander.Add_Collapsed({
-    write-host "collapsed"
+    $selectedFiles = $allTxtFiles | Where-Object { $_.IsChecked }
+    $global:Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
+    $global:currentIndex = GetRandomNumber $Words.Count
+    $Glosa.Text = $words[$currentIndex]
 })
 
 # Text - Glosa
