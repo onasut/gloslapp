@@ -7,17 +7,17 @@ Import-Module .\GlosFunktioner.psm1 # <--
 $pathXml = ".\gloslapp.xaml"
 $pathTxtFolder = ".\ListorMedOrd"
 
-# Read list of files for dropdown
-$allTxtFiles = GetAvailableTxtFiles $pathTxtFolder
+# Read complete list of files
+$global:allTxtFiles = GetAvailableTxtFiles $pathTxtFolder
 
-# Default, select the last one
+# Per default, select the last one
 $last = $allTxtFiles.Count - 1
 $allTxtFiles[$last].IsChecked = $true
 
 # Read words from selected files and pick a random word for starters
 $selectedFiles = $allTxtFiles | Where-Object { $_.IsChecked }
-$Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
-$currentIndex = GetRandomNumber $Words.Count
+$global:Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
+$global:currentIndex = GetRandomNumber $Words.Count
 
 # Loading gui
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
@@ -30,11 +30,8 @@ $Window = [Windows.Markup.XamlReader]::Load($reader)
 #==============
 
 # Dropdown menu to select which textfiles to use
-$CheckListBox = $Window.FindName("CheckListBox")
 $checkListOptions = $allTxtFiles
-#ForEach ($option in $checkListOptions) {
-#    $CheckListBox.Items.Add($option.Name)
-#}
+$CheckListBox = $Window.FindName("CheckListBox")
 $CheckListBox.ItemsSource = $checkListOptions
 
 # Glosa
@@ -43,30 +40,32 @@ $Glosa.Text = $words[$currentIndex]
 
 # Knapp för Föregående
 $buttonPrev = $Window.FindName("buttonPrev")
-$buttonPrev.Add_Click({ 
-    write-host "prev"
+$buttonPrev.Add_Click({
     $currentIndex = DecreaseIndex $currentIndex $Words.Count
+    $global:currentIndex = $currentIndex
     $Glosa.Text = $words[$currentIndex]
 })
 
 # Knapp för Slumpvis
 $buttonRand = $Window.FindName("buttonRand")
 $buttonRand.Add_Click({ 
-    write-host "rand"
-    $currentIndex = GetRandomNumber $WordCount
+    $WordCount = $global:Words.Count
+    $global:currentIndex = GetRandomNumber $WordCount
+    $currentIndex = $global:currentIndex
     $Glosa.Text = $words[$currentIndex]
+    # write-host "count: $wordcount index: $currentIndex"
 })
 
 # Knapp för Nästa
 $buttonNext = $Window.FindName("buttonNext")
 $buttonNext.Add_Click({ 
-    write-host "next"
     $currentIndex = IncreaseIndex $currentIndex $Words.Count
+    $global:currentIndex = $currentIndex
     $Glosa.Text = $words[$currentIndex]
 })
 
 
-
+#$words
 $Window.ShowDialog() | Out-Null
 
 
