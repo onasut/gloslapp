@@ -1,7 +1,7 @@
 
 # Imports
 Add-Type -AssemblyName PresentationFramework
-Import-Module .\GlosFunktioner.psm1 # <--
+Import-Module .\GlosFunktioner.psd1
 
 # References
 $pathXml = ".\gloslapp.xaml"
