@@ -14,9 +14,11 @@ $global:allTxtFiles = GetAvailableTxtFiles $pathTxtFolder
 $last = $allTxtFiles.Count - 1
 $allTxtFiles[$last].IsChecked = $true
 
-# Read words from selected files and pick a random word for starters
+# Read words from selected files
 $selectedFiles = $allTxtFiles | Where-Object { $_.IsChecked }
 $global:Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
+
+# Pick a random word for starters
 $global:currentIndex = GetRandomIndex $Words.Count
 
 # Loading xaml gui
