@@ -69,8 +69,8 @@ Copyright = '(c) 2023 jodse. All rights reserved.'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'GetAvailableTxtFiles', 'GetSelectedFiles', 'ReadWordsFromTxtFiles', 
-               'GetRandomNumber', 'DecreaseIndex', 'IncreaseIndex'
+FunctionsToExport = 'GetAvailableTxtFiles', 'ReadWordsFromTxtFiles', 
+               'GetRandomIndex', 'DecreaseIndex', 'IncreaseIndex'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()
