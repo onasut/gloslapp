@@ -17,7 +17,7 @@ $allTxtFiles[$last].IsChecked = $true
 # Read words from selected files and pick a random word for starters
 $selectedFiles = $allTxtFiles | Where-Object { $_.IsChecked }
 $global:Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
-$global:currentIndex = GetRandomNumber $Words.Count
+$global:currentIndex = GetRandomIndex $Words.Count
 
 # Loading xaml gui
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
@@ -35,7 +35,7 @@ $Expander = $Window.FindName("Expander")
 $Expander.Add_Collapsed({
     $selectedFiles = $allTxtFiles | Where-Object { $_.IsChecked }
     $global:Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
-    $global:currentIndex = GetRandomNumber $Words.Count
+    $global:currentIndex = GetRandomIndex $Words.Count
     $Glosa.Text = $words[$currentIndex]
 })
 
@@ -55,7 +55,7 @@ $buttonPrev.Add_Click({
 $buttonRand = $Window.FindName("buttonRand")
 $buttonRand.Add_Click({ 
     $WordCount = $Words.Count
-    $currentIndex = GetRandomNumber $WordCount
+    $currentIndex = GetRandomIndex $WordCount
     $global:currentIndex = $currentIndex
     $Glosa.Text = $words[$currentIndex]
     # write-host "count: $wordcount index: $currentIndex"

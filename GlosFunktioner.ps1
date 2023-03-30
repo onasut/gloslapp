@@ -1,43 +1,47 @@
 
 
-function GetAvailableTxtFiles ($folder) {
-    $choices = Get-ChildItem -Path $folder -Filter "*.txt" | ForEach-Object {
+function GetAvailableTxtFiles ($Path) {
+<#
+.SYNOPSIS
+    This function creates an object for handling txt-files. The object can be bound to a menu.
+
+.DESCRIPTION
+    The property Name correspons to filename.
+    The property IsChecked determines if the file is selected or not.
+
+.PARAMETER Path
+    Specifies the path where the .txt-files are located.
+
+.EXAMPLE
+    PS C:\> GetAvailableTxtFiles -Path '.\ListsOfThings'
+#>
+    $menuItems = Get-ChildItem -Path $Path -Filter "*.txt" | ForEach-Object {
         New-Object PSObject -Property @{
             Name = $_.Name
             IsChecked = $false
         }
     }
-    return $choices
+    return $menuItems
 }
 
 
-function SetLastTxtFileSelected ($choices) {
-        $last = $choices.Count - 1
-        $choices[$last].IsChecked = $true
-    return $choices
-}
+function ReadWordsFromTxtFiles ($SelectedFiles) {
+    # Not suited for reuse. Name of subfolder hard coded.
 
-
-function GetSelectedFiles ($choices) {
-    $selectedItems = $choices | Where-Object { $_.IsChecked }
-    return $selectedItems
-}
-
-
-function ReadWordsFromTxtFiles ($selectedFiles) {
     $words = @()
     $fileContents = @()
     # Read file content
-    foreach ($file in $selectedFiles.Name) {
+    foreach ($file in $SelectedFiles.Name) {
         $fileContents += Get-Content -Raw -Path ".\ListorMedOrd\$file" -Encoding UTF8
     }
 
-    # Ta bort radbrytningarna
-    #$fileContents = $fileContents -replace '\r|\n', ''
+    # Ta bort radbrytningarna och överflödiga mellanslag
+    $fileContents = $fileContents -replace '\s+', ' '
     $fileContents = $fileContents -replace '\s+', ' '
 
     # Dela upp varje element i arrayen med split på mellanslag
     $words = $fileContents -split ' '
+
     return $words
 }
 
@@ -48,23 +52,72 @@ function GetRandomWord ($words) {
 }
 
 
-function GetRandomNumber ($wordCount) {
-    $randomNumber = Get-Random -Min 0 -Max $wordCount
-    return $randomNumber
+function GetRandomIndex ($arrayLength) {
+<#
+.SYNOPSIS
+    This function returns a random index within the given range.
+
+.DESCRIPTION
+    The script randomizes an integer between 0 and the length of the array.
+
+.PARAMETER arrayLength
+    Specifies the index range - the count of items in the array.
+
+.EXAMPLE
+    PS C:\> $currentIndex = GetRandomIndex -arrayLength $myArray.Count
+#>
+    $randomIndex = Get-Random -Min 0 -Max $arrayLength
+    return $randomIndex
 }
 
 
 function IncreaseIndex($currentIndex,$arrayLength) {
+<#
+.SYNOPSIS
+    This function increases a circular index by 1 and returns the new index.
+
+.DESCRIPTION
+    The script handles out of index range by using modulo.
+
+.PARAMETER currentIndex
+    Specifies the starting position to increase from.
+
+.EXAMPLE
+    PS C:\> $currentIndex = IncreaseIndex $currentIndex $myArray.Count
+#>
     return ($currentIndex + 1 - $arrayLength) % $arrayLength
 }
 
 function DecreaseIndex($currentIndex,$arrayLength) {
+<#
+.SYNOPSIS
+    This function decreases a circular index by 1 and returns the new index.
+
+.DESCRIPTION
+    The script handles out of index range by using modulo.
+
+.PARAMETER currentIndex
+    Specifies the starting position to decrease from.
+
+.EXAMPLE
+    PS C:\> $currentIndex = DecreaseIndex $currentIndex $myArray.Count
+#>
     return ($currentIndex - 1 + $arrayLength) % $arrayLength
 }
 
 
 
+function SetLastTxtFileSelected ($choices) {
+    $last = $choices.Count - 1
+    $choices[$last].IsChecked = $true
+return $choices
+}
 
+
+function GetSelectedFiles ($choices) {
+$selectedItems = $choices | Where-Object { $_.IsChecked }
+return $selectedItems
+}
 
 
 # Tests
