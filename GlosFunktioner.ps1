@@ -46,12 +46,6 @@ function ReadWordsFromTxtFiles ($SelectedFiles) {
 }
 
 
-function GetRandomWord ($words) {
-    $randomWord= Get-Random -InputObject $words
-    return $randomWord
-}
-
-
 function GetRandomIndex ($arrayLength) {
 <#
 .SYNOPSIS
@@ -68,6 +62,13 @@ function GetRandomIndex ($arrayLength) {
 #>
     $randomIndex = Get-Random -Min 0 -Max $arrayLength
     return $randomIndex
+}
+
+function RandomWord {
+    $WordCount = $Words.Count
+    $currentIndex = GetRandomIndex $WordCount
+    $global:currentIndex = $currentIndex
+    $Glosa.Text = $words[$currentIndex]
 }
 
 
@@ -88,6 +89,13 @@ function IncreaseIndex($currentIndex,$arrayLength) {
     return ($currentIndex + 1 - $arrayLength) % $arrayLength
 }
 
+function NextWord {
+    $currentIndex = IncreaseIndex $currentIndex $Words.Count
+    $global:currentIndex = $currentIndex
+    $Glosa.Text = $words[$currentIndex]
+}
+
+
 function DecreaseIndex($currentIndex,$arrayLength) {
 <#
 .SYNOPSIS
@@ -105,7 +113,16 @@ function DecreaseIndex($currentIndex,$arrayLength) {
     return ($currentIndex - 1 + $arrayLength) % $arrayLength
 }
 
+function PreviousWord {
+    $currentIndex = DecreaseIndex $currentIndex $Words.Count
+    $global:currentIndex = $currentIndex
+    $Glosa.Text = $words[$currentIndex]
+}
 
+
+
+#########################
+# Unused functions
 
 function SetLastTxtFileSelected ($choices) {
     $last = $choices.Count - 1
@@ -119,8 +136,15 @@ $selectedItems = $choices | Where-Object { $_.IsChecked }
 return $selectedItems
 }
 
+function GetRandomWord ($words) {
+    $randomWord= Get-Random -InputObject $words
+    return $randomWord
+}
+
+
 
 # Tests
+
 #$pathTxtFolder = ".\ListorMedOrd"
 #$allTxtFiles = GetAvailableTxtFiles $pathTxtFolder
 #$allTxtFiles = SetLastTxtFileSelected($allTxtFiles)

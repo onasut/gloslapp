@@ -1,7 +1,7 @@
 
 # Imports
 Add-Type -AssemblyName PresentationFramework
-Import-Module .\GlosFunktioner.psm1 # <--
+Import-Module .\GlosFunktioner.psd1
 
 # References
 $pathXml = ".\gloslapp.xaml"
@@ -14,10 +14,13 @@ $global:allTxtFiles = GetAvailableTxtFiles $pathTxtFolder
 $last = $allTxtFiles.Count - 1
 $allTxtFiles[$last].IsChecked = $true
 
-# Read words from selected files and pick a random word for starters
+# Read words from selected files
 $selectedFiles = $allTxtFiles | Where-Object { $_.IsChecked }
 $global:Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
-$global:currentIndex = GetRandomIndex $Words.Count
+
+# Pick a word for starters
+$global:currentIndex = $Words[0]
+RandomWord
 
 # Loading xaml gui
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
@@ -35,8 +38,7 @@ $Expander = $Window.FindName("Expander")
 $Expander.Add_Collapsed({
     $selectedFiles = $allTxtFiles | Where-Object { $_.IsChecked }
     $global:Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
-    $global:currentIndex = GetRandomIndex $Words.Count
-    $Glosa.Text = $words[$currentIndex]
+    RandomWord
 })
 
 # Text - Glosa
@@ -46,27 +48,30 @@ $Glosa.Text = $words[$currentIndex]
 # Button - Previous
 $buttonPrev = $Window.FindName("buttonPrev")
 $buttonPrev.Add_Click({
-    $currentIndex = DecreaseIndex $currentIndex $Words.Count
-    $global:currentIndex = $currentIndex
-    $Glosa.Text = $words[$currentIndex]
+    PreviousWord
 })
 
 # Button - Random
 $buttonRand = $Window.FindName("buttonRand")
 $buttonRand.Add_Click({ 
-    $WordCount = $Words.Count
-    $currentIndex = GetRandomIndex $WordCount
-    $global:currentIndex = $currentIndex
-    $Glosa.Text = $words[$currentIndex]
-    # write-host "count: $wordcount index: $currentIndex"
+    RandomWord
 })
 
 # Button - Next
 $buttonNext = $Window.FindName("buttonNext")
 $buttonNext.Add_Click({ 
-    $currentIndex = IncreaseIndex $currentIndex $Words.Count
-    $global:currentIndex = $currentIndex
-    $Glosa.Text = $words[$currentIndex]
+    NextWord
+})
+
+# Keyboard bindings
+$Window.Add_KeyDown({
+    switch ($_.Key) {
+        "Up"    { RandomWord }
+        "Down"  { RandomWord }
+        "Space" { RandomWord }
+        "Left"  { PreviousWord }
+        "Right" { NextWord }
+    }
 })
 
 
