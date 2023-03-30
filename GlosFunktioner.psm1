@@ -1,2 +1,2 @@
 . .\GlosFunktioner.ps1
-Export-ModuleMember -Function GetAvailableTxtFiles, ReadWordsFromTxtFiles, GetRandomIndex, DecreaseIndex, IncreaseIndex
+Export-ModuleMember -Function GetAvailableTxtFiles, ReadWordsFromTxtFiles, PreviousWord, RandomWord, NextWord
