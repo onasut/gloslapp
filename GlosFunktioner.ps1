@@ -71,6 +71,7 @@ function RandomWord {
     $currentIndex = GetRandomIndex $WordCount
     $global:currentIndex = $currentIndex
     $Glosa.Text = $words[$currentIndex]
+    $global:seenWords++
 }
 
 
@@ -95,6 +96,7 @@ function NextWord {
     $currentIndex = IncreaseIndex $currentIndex $Words.Count
     $global:currentIndex = $currentIndex
     $Glosa.Text = $words[$currentIndex]
+    $global:seenWords++
 }
 
 
@@ -119,6 +121,7 @@ function PreviousWord {
     $currentIndex = DecreaseIndex $currentIndex $Words.Count
     $global:currentIndex = $currentIndex
     $Glosa.Text = $words[$currentIndex]
+    $global:seenWords++
 }
 
 

@@ -22,6 +22,9 @@ $global:Words = ReadWordsFromTxtFiles($pathTxtFolder, $selectedFiles)
 $global:currentIndex = $Words[0]
 RandomWord
 
+# Create a counter to track practice
+$global:seenWords = 0
+
 # Loading xaml gui
 $PSDefaultParameterValues['*:Encoding'] = 'utf8'
 [xml]$xaml = Get-Content -Path $pathXml
@@ -74,6 +77,10 @@ $Window.Add_KeyDown({
     }
 })
 
+$Window.Add_Closing({
+    $seenWords | Out-File -FilePath .\seenWords.txt
+    Write-Host "Ord som visats: $seenWords"
+})
 
 #$words
 $Window.ShowDialog() | Out-Null
