@@ -15,7 +15,9 @@ function GetAvailableTxtFiles ($Path) {
 .EXAMPLE
     PS C:\> GetAvailableTxtFiles -Path '.\ListsOfThings'
 #>
-    $menuItems = Get-ChildItem -Path $Path -Filter "*.txt" | ForEach-Object {
+    $menuItems = Get-ChildItem -Path $Path -Filter "*.txt" | `
+                    Sort-Object { [int]($_.Name -replace '\D') }, { $_.Name } | `
+                    ForEach-Object {
         New-Object PSObject -Property @{
             Name = $_.Name
             IsChecked = $false
