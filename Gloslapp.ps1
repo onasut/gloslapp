@@ -1,7 +1,7 @@
 
 # Imports
 Add-Type -AssemblyName PresentationFramework
-cd $PSScriptRoot
+Set-Location $PSScriptRoot
 Import-Module .\GlosFunktioner.psd1
 
 # References
