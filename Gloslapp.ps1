@@ -1,6 +1,7 @@
 
 # Imports
 Add-Type -AssemblyName PresentationFramework
+cd $PSScriptRoot
 Import-Module .\GlosFunktioner.psd1
 
 # References
@@ -78,7 +79,7 @@ $Window.Add_KeyDown({
 })
 
 $Window.Add_Closing({
-    $seenWords | Out-File -FilePath .\seenWords.txt
+    $seenWords | Out-File -FilePath .\seenWords.txt -Append
     Write-Host "Ord som visats: $seenWords"
 })
 
