@@ -27,13 +27,13 @@ function GetAvailableTxtFiles ($Path) {
 }
 
 
-function ReadWordsFromTxtFiles ($SelectedFiles) {
+function ReadWordsFromTxtFiles ($selectedFiles) {
     # Not suited for reuse. Name of subfolder hard coded.
 
     $words = @()
     $fileContents = @()
     # Read file content
-    foreach ($file in $SelectedFiles.Name) {
+    foreach ($file in $selectedFiles.Name) {
         $fileContents += Get-Content -Raw -Path ".\ListorMedOrd\$file" -Encoding UTF8
     }
 
@@ -67,10 +67,10 @@ function GetRandomIndex ($arrayLength) {
 }
 
 function RandomWord {
-    $WordCount = $Words.Count
-    $currentIndex = GetRandomIndex $WordCount
+    $wordCount = $words.Count
+    $currentIndex = GetRandomIndex $wordCount
     $global:currentIndex = $currentIndex
-    $Glosa.Text = $words[$currentIndex]
+    $glosa.Text = $words[$currentIndex]
     $global:seenWords++
 }
 
@@ -93,9 +93,9 @@ function IncreaseIndex($currentIndex,$arrayLength) {
 }
 
 function NextWord {
-    $currentIndex = IncreaseIndex $currentIndex $Words.Count
+    $currentIndex = IncreaseIndex $currentIndex $words.Count
     $global:currentIndex = $currentIndex
-    $Glosa.Text = $words[$currentIndex]
+    $glosa.Text = $words[$currentIndex]
     $global:seenWords++
 }
 
@@ -118,37 +118,39 @@ function DecreaseIndex($currentIndex,$arrayLength) {
 }
 
 function PreviousWord {
-    $currentIndex = DecreaseIndex $currentIndex $Words.Count
+    $currentIndex = DecreaseIndex $currentIndex $words.Count
     $global:currentIndex = $currentIndex
-    $Glosa.Text = $words[$currentIndex]
+    $glosa.Text = $words[$currentIndex]
     $global:seenWords++
 }
 
 
 
 #########################
-# Unused functions
+# Depricated 
 
-function SetLastTxtFileSelected ($choices) {
-    $last = $choices.Count - 1
-    $choices[$last].IsChecked = $true
-return $choices
-}
-
-
-function GetSelectedFiles ($choices) {
-$selectedItems = $choices | Where-Object { $_.IsChecked }
-return $selectedItems
-}
-
-function GetRandomWord ($words) {
-    $randomWord= Get-Random -InputObject $words
-    return $randomWord
-}
+#function SetLastTxtFileSelected ($choices) {
+#    $last = $choices.Count - 1
+#    $choices[$last].IsChecked = $true
+#return $choices
+#}
 
 
+#function GetSelectedFiles ($choices) {
+#$selectedItems = $choices | Where-Object { $_.IsChecked }
+#return $selectedItems
+#}
 
+#function GetRandomWord ($words) {
+#    $randomWord= Get-Random -InputObject $words
+#    return $randomWord
+#}
+
+
+
+#--------
 # Tests
+#--------
 
 #$pathTxtFolder = ".\ListorMedOrd"
 #$allTxtFiles = GetAvailableTxtFiles $pathTxtFolder
